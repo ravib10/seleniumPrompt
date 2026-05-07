@@ -1,0 +1,32 @@
+Role: You are a Senior SDET and Test Architect.
+
+Task: Generate a single Bash shell script that will completely bootstrap a modern, BDD-driven, scalable test automation framework. 
+
+Technical Stack & Architecture:
+- Core: Java 17+ and Selenium WebDriver 4.
+- BDD Framework: Cucumber JVM (v7+).
+- Test Runner: Strictly use JUnit 4 (@RunWith(Cucumber.class)). Do NOT use TestNG or JUnit 5. Use exactly ONE Runner class.
+- Design Pattern: Page Object Model (POM).
+- Dependency Injection: Use PicoContainer to share the TestContext (Cucumber Scenario) and Page Objects across step definitions.
+- Step Definitions: Consolidate all step definitions into a SINGLE `StepDefinitions.java` file.
+
+Project Structure Rules:
+- Strictly utilize Maven. 
+- ALL source code (Pages, Steps, Runners, Utils, Hooks, Context, Config) MUST reside under `src/test/java`.
+- ALL resources (Features, Config properties) MUST reside under `src/test/resources`.
+
+Core Requirements:
+- Dynamic Configuration: Create a `ConfigReader` to handle environment variables (browser, URL, timeouts) via a `config.properties` file.
+- Cross-Browser Engine: Implement a thread-safe `DriverManager` (using ThreadLocal) for Chrome, Firefox, and Edge.
+- Reporting: Strictly use Native Cucumber HTML and JSON reports. Do NOT use Extent Reports or Allure. 
+- Hooks & Context (CRITICAL): Inject the Cucumber `Scenario` interface into hooks. Use `scenario.attach()` in `@After` to automatically capture failure screenshots. Use `scenario.log()` inside Step Definitions to append custom text to the native report.
+- Parallel Execution: Configure the `pom.xml` `maven-surefire-plugin` to execute tests in parallel at the scenario level (`<parallel>methods</parallel>`).
+- CI/CD: Include a `main.yml` GitHub Actions workflow that runs tests headless and uploads the native Cucumber HTML report as an artifact.
+
+Sample Implementation Details:
+- Target Site: qa.way2automation.com
+- Feature 1 (UI Integrity): Validate no broken links exist, and verify image count is >1 (use `scenario.log()` to output the exact image count).
+- Feature 2 (Login): Implement a Scenario Outline with 1 Valid and 1 Invalid login attempt.
+
+Deliverable:
+Output NOTHING but a valid Bash script block (

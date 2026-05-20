@@ -1,10 +1,9 @@
-
 Role: You are a Senior SDET and Test Architect.
 
 Task: Generate a scalable, Maven-based BDD UI test automation framework.
 
 Technical Stack & Architecture:
-- Core: Java 1.8 and Selenium WebDriver 4.
+- Core: Java 17 and latest Selenium WebDriver 4.
 - BDD Framework: Cucumber JVM (v7+).
 - Test Runner: Strictly use JUnit 4 (@RunWith(Cucumber.class)). Generate ThoughtWorks Native JSON and HTML reports into `target/cucumber-reports/`. Do NOT use TestNG.
 - Design Pattern: Page Object Model (POM). Use standard Selenium `@FindBy` annotations.
@@ -18,14 +17,12 @@ Project Structure Rules:
 Core Requirements:
 - Dynamic Configuration: Create a `ConfigReader` that reads from `config.properties`, but prioritizing System Property overrides (e.g., `-Dbrowser=firefox`) for CLI execution.
 - Cross-Browser Engine: Implement a `DriverManager` utilizing a `ThreadLocal<WebDriver>` for thread-safe parallel execution. Support Chrome, Firefox, and Edge (with headless toggles).
-- Parallel Execution: Configure the `pom.xml` `maven-surefire-plugin` to execute tests in parallel at the scenario level (`<parallel>methods</parallel>`).
-- Step Definitions: Consolidate all step definitions into a SINGLE `StepDefinitions.java` file. Instantiate the Page Objects directly as private fields (e.g., `private HomePage homePage = new HomePage();`). Do NOT use PicoContainer or a `TestContext` class.
+- Parallel Execution: Configure the `pom.xml` `maven-surefire-plugin` to execute tests in parallel at the Feature level (using `<parallel>classes</parallel>`).
+- Step Definitions: Organize step definitions logically by feature/domain into multiple classes. Use `cucumber-picocontainer` to inject a shared `DriverManager` and Cucumber `Scenario` state across the step files. Do not use a single God class.
 - Hooks & Scenario Injection (CRITICAL): 
   - In `Hooks.java`, force driver initialization in `@Before` and use `scenario.attach()` in `@After` to automatically capture failure screenshots. 
-  - Inside `StepDefinitions.java`, implement a `@Before` method to capture the Cucumber `Scenario` object into a class variable so that `scenario.log()` can be used across all steps.
 - Logging: Configure `log4j2.xml` to output to the console and `target/logs/automation.log`. In `BasePage.java`, actively log all interactions (`click`, `sendKeys`, `getText`) using `logger.debug()`.
 - CI/CD: Include a `main.yml` GitHub Actions workflow that triggers on push/PR, runs tests headless, and uploads the Cucumber HTML reports as an artifact.
-```
 
 Sample Implementation Details:
 - Target Site: qa.way2automation.com

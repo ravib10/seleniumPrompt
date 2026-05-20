@@ -9,6 +9,10 @@ Technical Stack & Architecture:
 - Design Pattern: Page Object Model (POM). Use standard Selenium `@FindBy` annotations.
 - Page Factory: Do NOT use a PageFactoryManager class. Call `PageFactory.initElements(driver, this);` explicitly inside the constructors of every Page Object class.
 
+Coding Standards (STRICT):
+- NO LAMBDAS OR STREAMS: Do NOT use any Java lambda expressions (`->`) or the Java Stream API anywhere in the codebase. 
+- You MUST use traditional imperative programming. For example, use standard `for` or `for-each` loops instead of `.forEach()`, and use explicit anonymous inner classes if required. Write traditional, highly readable Java code despite using Java 17.
+
 Project Structure Rules:
 - Strictly utilize Maven. 
 - ALL source code (Pages, Steps, Runners, Drivers, Utils, Hooks) MUST reside under `src/test/java`. DO NOT use `src/main`.
